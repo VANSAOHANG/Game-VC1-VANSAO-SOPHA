@@ -12,14 +12,25 @@ canvas.pack(fill = "both", expand = True)
 # Variable................................................................................................
 clicksound = True
 diamondcondition = False
-grid = [
-[3,3,3,3,3,3],
-[3,0,0,0,0,3],
-[3,0,2,0,0,3],
-[3,0,3,5,0,3],
-[3,0,1,0,0,3],
-[3,0,0,0,3,3],
-[3,3,3,3,3,4]]
+levels=1
+# grid =  [
+#         [3,3,3,3,3,3],
+#         [3,0,0,0,0,3],
+#         [3,0,2,0,0,3],
+#         [3,0,3,5,0,3],
+#         [3,0,1,0,0,3],
+#         [3,0,0,0,3,3],
+#         [3,3,3,3,3,4]]
+grid =  [
+    [3,3,3,3,3,3,3,3],
+    [3,2,5,0,0,0,2,3],
+    [3,3,0,1,3,0,3,3],
+    [3,2,0,5,3,0,0,3],
+    [3,5,0,0,0,3,0,3],
+    [3,0,0,0,0,5,0,3],
+    [3,3,0,2,3,0,0,3],
+    [3,3,3,3,3,3,3,3]]
+
 #imgages
 img = tk.PhotoImage(file="images\mario.png")
 diamond = tk.PhotoImage(file="images\diamond2.png")
@@ -45,11 +56,11 @@ def remove(event):
 def drawgrid():
     canvas.delete("all")
     canvas.create_image(0,0,anchor="nw",image = background)
-    y1 = 70
-    y2 = 130
+    y1 = 80
+    y2 = 140
     for row in range(len(grid)):
-        x1 = 120
-        x2 = 180
+        x1 = 200
+        x2 = 260
         for col in range(len(grid[0])):
             x1+=60
             x2+=60
@@ -69,29 +80,103 @@ def drawgrid():
         y1+=60
         y2+=60
 def win():
-    global grid, diamondcondition
+    global grid, diamondcondition, levels
     diamondIndex = getDiamondIndex()
     uwin =""
     if diamondIndex==[]:
+        levels +=1
         uwin=canvas.create_text(350,300,text="You Win", fill="white", font=('Helvetica 30 bold'))
-        # grid = [
-                # [4,3,3,3,3,3,3,3],
-                # [4,3,0,0,0,0,2,3],
-                # [3,3,0,5,3,3,3,3],
-                # [3,0,0,0,0,0,2,3],
-                # [3,0,0,5,3,3,3,3],
-                # [3,0,0,5,1,0,2,3],
-                # [3,0,0,0,0,0,0,3],
-                # [3,3,3,3,3,3,3,3]]
-        grid = [
-                [4,4,3,3,3,3,4,4],
-                [4,4,3,2,2,3,4,4],
-                [4,3,3,0,2,3,3,4],
-                [4,3,0,0,5,2,3,4],
-                [3,3,0,5,0,0,3,3],
-                [3,0,0,3,5,5,0,3],
-                [3,0,0,1,0,0,0,3],
-                [3,3,3,3,3,3,3,3]]
+        if levels == 2:
+            grid = [
+                    
+                    [3,3,3,3,3,3,3],
+                    [3,0,0,0,0,0,3],
+                    [3,3,2,0,5,1,3],
+                    [3,0,0,3,3,0,3],
+                    [3,3,2,0,5,0,3],
+                    [3,0,0,0,0,0,3],
+                    [3,3,3,3,3,3,3]]
+        if levels == 3:
+            grid = [
+            [3,3,3,3,3,3,3,3],
+            [3,0,3,0,0,0,0,3],
+            [3,0,0,1,0,0,0,3],
+            [3,0,0,5,5,5,0,3],
+            [3,0,0,3,0,0,0,3],
+            [3,0,2,3,2,2,0,3],
+            [3,3,3,3,3,3,3,3],
+            [4,4,4,4,4,4,4,4]]
+        if levels == 4:
+            grid = [
+                    [4,4,4,4,4,4,4,4],
+                    [3,3,3,3,3,3,4,4],
+                    [3,1,0,0,0,3,4,4],
+                    [3,0,5,0,0,3,4,4],
+                    [3,3,3,3,0,3,4,4],
+                    [3,2,0,5,0,3,4,4],
+                    [3,0,0,0,2,3,4,4],
+                    [3,3,3,3,3,3,4,4],
+                    [4,4,4,4,4,4,4,4]
+                ]
+        # if levels == 4:
+        #     grid = [
+        #             [3,3,3,3,3,3,4],
+        #             [3,0,0,0,0,3,4],
+        #             [3,0,2,2,0,3,3],
+        #             [3,0,3,5,0,0,3],
+        #             [3,0,1,5,0,0,3],
+        #             [3,0,0,0,0,0,3],
+        #             [3,3,3,3,3,3,3]]
+        if levels == 5:
+            grid = [
+                    [3,3,3,3,3,3,3,3],
+                    [3,0,0,0,0,0,0,3],
+                    [3,0,1,5,2,0,0,3],
+                    [3,0,0,5,2,0,0,3],
+                    [3,0,0,2,5,0,0,3],
+                    [3,0,0,0,0,0,0,3],
+                    [3,0,0,0,0,0,0,3],
+                    [3,3,3,3,3,3,3,3]]
+        if levels == 6:
+            grid = [
+                    [4,3,3,3,3,3,3,3],
+                    [4,3,0,0,0,0,2,3],
+                    [3,3,0,5,3,3,3,3],
+                    [3,0,0,0,0,0,2,3],
+                    [3,0,0,5,3,3,3,3],
+                    [3,0,0,5,1,0,2,3],
+                    [3,0,0,0,0,0,0,3],
+                    [3,3,3,3,3,3,3,3]]
+        if levels == 7:
+            grid = [
+                    [4,4,3,3,3,4,4,4],
+                    [4,4,3,2,3,4,4,4],
+                    [4,4,3,0,3,3,3,3],
+                    [3,3,3,5,0,5,2,3],
+                    [3,2,0,5,1,3,3,3],
+                    [3,3,3,3,5,3,4,4],
+                    [4,4,4,3,2,3,4,4],
+                    [4,4,4,3,3,3,4,4]]
+        if levels == 8:
+            grid = [
+        [4,4,3,3,3,3,3,4],
+        [4,4,3,1,3,0,3,4],
+        [3,3,3,5,2,0,3,4],
+        [3,0,5,0,0,0,3,4],
+        [3,0,2,0,5,2,3,4],
+        [3,0,0,3,0,0,3,4],
+        [3,0,0,0,0,0,3,4],
+        [3,3,3,3,3,3,3,4]]
+        if levels == 9:
+            grid = [
+                    [4,4,3,3,3,3,4,4],
+                    [4,4,3,2,2,3,4,4],
+                    [4,3,3,0,2,3,3,4],
+                    [4,3,0,0,5,2,3,4],
+                    [3,3,0,5,0,0,3,3],
+                    [3,0,0,3,5,5,0,3],
+                    [3,0,0,1,0,0,0,3],
+                    [3,3,3,3,3,3,3,3]]
         canvas.after(4000,drawgrid)
         diamondcondition = False
     return uwin
@@ -198,7 +283,8 @@ def moveDown(event):
             grid[rowIndex1][colIndex1]=2
             grid[rowIndex1+1][colIndex1]=1
             diamondcondition = False
-    elif grid[rowIndex1+1][colIndex1] == 5 and grid[rowIndex1+2][colIndex1] != 3 and grid[rowIndex1][colIndex1+2] != 5 and grid[rowIndex1-2][colIndex1] != 5:
+    elif grid[rowIndex1+1][colIndex1] == 5 and grid[rowIndex1+2][colIndex1] != 3 and grid[rowIndex1][colIndex1+2] != 5 :
+        # and grid[rowIndex1-2][colIndex1] != 5
         grid[rowIndex1][colIndex1]=0
         grid[rowIndex1+1][colIndex1]=1
         grid[rowIndex1+2][colIndex1]=5
@@ -236,12 +322,13 @@ root.bind("<Down>",moveDown)
 root.bind("<Up>",moveUp)
 #start game
 def start(event):
+    displaysound()
     drawgrid()
 # about game...............................................................................................................
 def about(event):
     displaysound()
     canvas.move("welcome", 0, -100)
-    canvas.create_rectangle(300, 150, 700, 400, fill="#784428", tags="delete")
+    canvas.create_rectangle(300, 150, 700, 400, fill="#22BBEA", tags="delete")
     canvas.create_text(680, 175, text = "X", fill="red", font=('Helvetica 24 bold'), tags="remove")
     canvas.create_text(330, 190, anchor=W, font="Purisa",text="- Step1: Click start to choose levels.", tags="aboutText",fill="white")
     canvas.create_text(330, 220, anchor=W, font="Purisa",text="- Step2: Use arrow key for movement.", tags="aboutText",fill="white")
@@ -262,16 +349,16 @@ def startbg():
     # Add Text 
     canvas.create_text(500, 150, text = "Welcome to the sukobane!!!", fill="#fff", font="Times 35 italic bold", tags="welcome")
     #Start
-    canvas.create_rectangle(430, 220, 610, 280, fill="#784428", tags="start")
-    canvas.create_text(515, 250, text = "START", fill="white", font="Times 35 italic bold", tags="start")
+    canvas.create_rectangle(430, 220, 610, 280, fill="#22BBEA", tags="start")
+    canvas.create_text(515, 250, text = "START", fill="white", font="Times 32 italic bold", tags="start")
 
     # about
-    canvas.create_rectangle(430, 320, 610, 380, fill="#784428", tags="quit")
-    canvas.create_text(515, 350, text = "ABOUT", fill="white", font="Times 35 italic bold", tags="quit")
+    canvas.create_rectangle(430, 320, 610, 380, fill="#22BBEA", tags="quit")
+    canvas.create_text(515, 350, text = "ABOUT", fill="white", font="Times 32 italic bold", tags="quit")
     
     # exit
-    canvas.create_rectangle(430, 420, 610, 480, fill="#784428", tags="exit")
-    canvas.create_text(515, 450, text = "EXIT", fill="white", font="Times 35 italic bold", tags="exit")
+    canvas.create_rectangle(430, 420, 610, 480, fill="#22BBEA", tags="exit")
+    canvas.create_text(515, 450, text = "EXIT", fill="white", font="Times 32 italic bold", tags="exit")
     
 # First of game...............................................................................................................
 def begin():
