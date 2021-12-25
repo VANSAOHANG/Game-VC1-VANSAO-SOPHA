@@ -13,23 +13,8 @@ canvas.pack(fill = "both", expand = True)
 clicksound = True
 diamondcondition = False
 levels=1
-# grid =  [
-#         [3,3,3,3,3,3],
-#         [3,0,0,0,0,3],
-#         [3,0,2,0,0,3],
-#         [3,0,3,5,0,3],
-#         [3,0,1,0,0,3],
-#         [3,0,0,0,3,3],
-#         [3,3,3,3,3,4]]
-grid =  [
-    [3,3,3,3,3,3,3,3],
-    [3,2,5,0,0,0,2,3],
-    [3,3,0,1,3,0,3,3],
-    [3,2,0,5,3,0,0,3],
-    [3,5,0,0,0,3,0,3],
-    [3,0,0,0,0,5,0,3],
-    [3,3,0,2,3,0,0,3],
-    [3,3,3,3,3,3,3,3]]
+grid = []
+
 
 #imgages
 img = tk.PhotoImage(file="images\mario.png")
@@ -41,20 +26,27 @@ grass = tk.PhotoImage(file="images\grass.png")
 # Function ....................................................................................................................
 
 # Display sound................................................................................................................
-def displaysound():
-    global clicksound
-    if clicksound:
-        winsound .PlaySound("Sounds.\click.wav", winsound.SND_FILENAME)
-def remove(event):
-    displaysound()
-    canvas.delete("remove")
-    canvas.delete("delete")
-    canvas.delete("musicon")
-    canvas.delete("aboutText")
-    canvas.move("welcome", 0, 100)
 
+
+#__________________________get grid from files_______________________________ 
+def getgrid():
+    global levels
+    file = open("level"+str(levels)+".txt")
+    grid = file.read()
+    grid = grid.split('|')
+    for i in range(len(grid)):
+        grid[i] = grid[i].strip('\n')
+        grid[i] = grid[i].split(',')
+        for j in range(len(grid[i])):
+            grid[i][j] = int(grid[i][j])
+    file.close()
+    return grid
+grid = getgrid()
+# _________________________drwagrid__________________________________
 def drawgrid():
+    global grid
     canvas.delete("all")
+    getgrid()
     canvas.create_image(0,0,anchor="nw",image = background)
     y1 = 80
     y2 = 140
@@ -79,108 +71,30 @@ def drawgrid():
                 canvas.create_image(x2-30,y2-30,image=box)
         y1+=60
         y2+=60
+def displaysound():
+    global clicksound
+    if clicksound:
+        winsound .PlaySound("Sounds.\click.wav", winsound.SND_FILENAME)
+def remove(event):
+    displaysound()
+    canvas.delete("remove")
+    canvas.delete("delete")
+    canvas.delete("musicon")
+    canvas.delete("aboutText")
+    canvas.move("welcome", 0, 100)
 def win():
     global grid, diamondcondition, levels
     diamondIndex = getDiamondIndex()
     uwin =""
-    if diamondIndex==[]:
+    if diamondIndex==[] and levels<11:
+        uwin=canvas.create_text(350,300,text="You Win" + "\n"+"level"+str(levels), fill="white", font=('Helvetica 30 bold'))
         levels +=1
-        uwin=canvas.create_text(350,300,text="You Win", fill="white", font=('Helvetica 30 bold'))
-        if levels == 2:
-            grid = [
-                    
-                    [3,3,3,3,3,3,3],
-                    [3,0,0,0,0,0,3],
-                    [3,3,2,0,5,1,3],
-                    [3,0,0,3,3,0,3],
-                    [3,3,2,0,5,0,3],
-                    [3,0,0,0,0,0,3],
-                    [3,3,3,3,3,3,3]]
-        if levels == 3:
-            grid = [
-            [3,3,3,3,3,3,3,3],
-            [3,0,3,0,0,0,0,3],
-            [3,0,0,1,0,0,0,3],
-            [3,0,0,5,5,5,0,3],
-            [3,0,0,3,0,0,0,3],
-            [3,0,2,3,2,2,0,3],
-            [3,3,3,3,3,3,3,3],
-            [4,4,4,4,4,4,4,4]]
-        if levels == 4:
-            grid = [
-                    [4,4,4,4,4,4,4,4],
-                    [3,3,3,3,3,3,4,4],
-                    [3,1,0,0,0,3,4,4],
-                    [3,0,5,0,0,3,4,4],
-                    [3,3,3,3,0,3,4,4],
-                    [3,2,0,5,0,3,4,4],
-                    [3,0,0,0,2,3,4,4],
-                    [3,3,3,3,3,3,4,4],
-                    [4,4,4,4,4,4,4,4]
-                ]
-        # if levels == 4:
-        #     grid = [
-        #             [3,3,3,3,3,3,4],
-        #             [3,0,0,0,0,3,4],
-        #             [3,0,2,2,0,3,3],
-        #             [3,0,3,5,0,0,3],
-        #             [3,0,1,5,0,0,3],
-        #             [3,0,0,0,0,0,3],
-        #             [3,3,3,3,3,3,3]]
-        if levels == 5:
-            grid = [
-                    [3,3,3,3,3,3,3,3],
-                    [3,0,0,0,0,0,0,3],
-                    [3,0,1,5,2,0,0,3],
-                    [3,0,0,5,2,0,0,3],
-                    [3,0,0,2,5,0,0,3],
-                    [3,0,0,0,0,0,0,3],
-                    [3,0,0,0,0,0,0,3],
-                    [3,3,3,3,3,3,3,3]]
-        if levels == 6:
-            grid = [
-                    [4,3,3,3,3,3,3,3],
-                    [4,3,0,0,0,0,2,3],
-                    [3,3,0,5,3,3,3,3],
-                    [3,0,0,0,0,0,2,3],
-                    [3,0,0,5,3,3,3,3],
-                    [3,0,0,5,1,0,2,3],
-                    [3,0,0,0,0,0,0,3],
-                    [3,3,3,3,3,3,3,3]]
-        if levels == 7:
-            grid = [
-                    [4,4,3,3,3,4,4,4],
-                    [4,4,3,2,3,4,4,4],
-                    [4,4,3,0,3,3,3,3],
-                    [3,3,3,5,0,5,2,3],
-                    [3,2,0,5,1,3,3,3],
-                    [3,3,3,3,5,3,4,4],
-                    [4,4,4,3,2,3,4,4],
-                    [4,4,4,3,3,3,4,4]]
-        if levels == 8:
-            grid = [
-        [4,4,3,3,3,3,3,4],
-        [4,4,3,1,3,0,3,4],
-        [3,3,3,5,2,0,3,4],
-        [3,0,5,0,0,0,3,4],
-        [3,0,2,0,5,2,3,4],
-        [3,0,0,3,0,0,3,4],
-        [3,0,0,0,0,0,3,4],
-        [3,3,3,3,3,3,3,4]]
-        if levels == 9:
-            grid = [
-                    [4,4,3,3,3,3,4,4],
-                    [4,4,3,2,2,3,4,4],
-                    [4,3,3,0,2,3,3,4],
-                    [4,3,0,0,5,2,3,4],
-                    [3,3,0,5,0,0,3,3],
-                    [3,0,0,3,5,5,0,3],
-                    [3,0,0,1,0,0,0,3],
-                    [3,3,3,3,3,3,3,3]]
+        grid = getgrid()
         canvas.after(4000,drawgrid)
         diamondcondition = False
     return uwin
 def getindex1():
+    global grid
     index1 = []
     for i in range(len(grid)):
         for j in range(len(grid[0])):
@@ -200,7 +114,6 @@ def getDiamondIndex():
                 array.append(col)
                 diamondIndex.append(array)
     return diamondIndex
-
 
 # get index of the box
 def getBoxIndex():
