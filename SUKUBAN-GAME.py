@@ -74,12 +74,13 @@ def drawgrid():
 def displaysound():
     global clicksound
     if clicksound:
-        winsound .PlaySound("Sounds.\click.wav", winsound.SND_FILENAME)
+        winsound .PlaySound("Sounds.\click.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
+def gamesound():
+    winsound .PlaySound("Sounds.\music-game.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
 def remove(event):
     displaysound()
     canvas.delete("remove")
     canvas.delete("delete")
-    canvas.delete("musicon")
     canvas.delete("aboutText")
     canvas.move("welcome", 0, 100)
 def win():
@@ -258,9 +259,10 @@ canvas.tag_bind("exit","<Button-1>", exitgame)
 # #Start game.....................................................................................................................
 def startbg():
     global bg
+    gamesound()
     canvas.create_image( 0, 0, image = bg, anchor = "nw", tags="bg1")
     # Add Text 
-    canvas.create_text(500, 150, text = "Welcome to the sukobane!!!", fill="#fff", font="Times 35 italic bold", tags="welcome")
+    canvas.create_text(500, 150, text = "Welcome to the sukobane!!!", fill="#22BBEA", font="Times 35 italic bold", tags="welcome")
     #Start
     canvas.create_rectangle(430, 220, 610, 280, fill="#22BBEA", tags="start")
     canvas.create_text(515, 250, text = "START", fill="white", font="Times 32 italic bold", tags="start")
@@ -275,6 +277,7 @@ def startbg():
     
 # First of game...............................................................................................................
 def begin():
+    gamesound()
     canvas.create_text(500, 550, text = "Loading...", fill="white", font="Times 20 italic bold", tags="welcome")
     canvas.after(2000, startbg)
 
