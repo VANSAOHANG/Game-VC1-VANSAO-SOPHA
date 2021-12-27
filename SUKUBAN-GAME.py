@@ -3,19 +3,18 @@ import tkinter as tk
 from winsound import *
 import winsound
 from tkinter import messagebox
-root = Tk()  
+root = tk.Tk()  
 root.geometry("1000x600") 
-root.title("Create by VANSAO & SOPHA")
 root.resizable(0,0)
-canvas = Canvas( root, width = 800, height = 600) 
+frame = tk.Frame()
+canvas = tk.Canvas(frame)
 canvas.pack(fill = "both", expand = True) 
+frame.pack(fill = "both", expand = True) 
 # Variable................................................................................................
-clicksound = True
+
 diamondcondition = False
 levels=1
 grid = []
-
-
 #imgages
 img = tk.PhotoImage(file="images\mario.png")
 diamond = tk.PhotoImage(file="images\diamond2.png")
@@ -72,8 +71,6 @@ def drawgrid():
         y1+=60
         y2+=60
 def displaysound():
-    global clicksound
-    if clicksound:
         winsound .PlaySound("Sounds.\click.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
 def gamesound():
     winsound .PlaySound("Sounds.\music-game.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
@@ -132,102 +129,154 @@ def getBoxIndex():
 
 
 def moveRight(event):
-    global grid,diamondcondition
+    global grid,diamondcondition,diamondcolIndex,diamondrowIndex
     index = getindex1()
     rowIndex1 = index[0]
     colIndex1 = index[1]
-    if diamondcondition and grid[rowIndex1][colIndex1+1] != 3 and grid[rowIndex1][colIndex1+1] != 2:
-        grid[rowIndex1][colIndex1]=2
-        grid[rowIndex1][colIndex1+1]=1
-        diamondcondition = False
-    elif grid[rowIndex1][colIndex1+1] == 5 and grid[rowIndex1][colIndex1+2] != 3 and grid[rowIndex1][colIndex1+2] != 5:
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1][colIndex1+1]=1
-        grid[rowIndex1][colIndex1+2]=5
+    if grid[rowIndex1][colIndex1+1] != 3:
+        
+        if diamondcondition :
+            if  grid[rowIndex1][colIndex1+1] != 2:
+                diamondcondition = False
+            if grid[rowIndex1][colIndex1+2] != 5:
+                if grid[rowIndex1][colIndex1+1] == 5:
+                    grid[rowIndex1][colIndex1+2]=5
+            grid[rowIndex1][colIndex1]=0
+            grid[rowIndex1][colIndex1]=2
+            grid[rowIndex1][colIndex1+1]=1
+        elif grid[rowIndex1][colIndex1+1] == 5 and grid[rowIndex1][colIndex1+2] != 3 and grid[rowIndex1][colIndex1+2] != 5:
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                    grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
+            if grid[rowIndex1][colIndex1+2] == 2:
+                diamondrowIndex = rowIndex1
+                diamondcolIndex = colIndex1+2
+            grid[rowIndex1][colIndex1+1]=1
+            grid[rowIndex1][colIndex1+2]=5
 
-    elif grid[rowIndex1][colIndex1+1] != 5 and grid[rowIndex1][colIndex1+1] != 3 and not diamondcondition:
-        if grid[rowIndex1][colIndex1+1] == 2:
-            diamondcondition = True
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1][colIndex1+1]=1
+        elif grid[rowIndex1][colIndex1+1] != 5 and not diamondcondition:
+            if grid[rowIndex1][colIndex1+1] == 2:
+                diamondcondition = True
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
+            grid[rowIndex1][colIndex1+1]=1
+        
 
     drawgrid()
     win()
     
 def moveLeft(event):
-    global grid,diamondcondition
+    global grid,diamondcondition,diamondrowIndex,diamondcolIndex
     index = getindex1()
     rowIndex1 = index[0]
     colIndex1 = index[1]
-    if diamondcondition and grid[rowIndex1][colIndex1-1] != 3:
-        if grid[rowIndex1][colIndex1-1] == 5:
+    if grid[rowIndex1][colIndex1-1] != 3:
+        if diamondcondition :
+            if grid[rowIndex1][colIndex1-1] != 2:
+                diamondcondition = False
+            if grid[rowIndex1][colIndex1-2] != 5:
+                if grid[rowIndex1][colIndex1-1] == 5:
+                    grid[rowIndex1][colIndex1-2]=5
+            grid[rowIndex1][colIndex1]=0
             grid[rowIndex1][colIndex1]=2
+            grid[rowIndex1][colIndex1-1]=1
+        elif grid[rowIndex1][colIndex1-1] == 5 and grid[rowIndex1][colIndex1-2] != 3 and grid[rowIndex1][colIndex1-2] != 5:
+
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                    grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
+            if grid[rowIndex1][colIndex1-2] == 2:
+                diamondrowIndex = rowIndex1
+                diamondcolIndex = colIndex1-2
             grid[rowIndex1][colIndex1-1]=1
             grid[rowIndex1][colIndex1-2]=5
-        else:
-            grid[rowIndex1][colIndex1]=2
+        elif grid[rowIndex1][colIndex1-1] != 5  and  not diamondcondition:
+            if grid[rowIndex1][colIndex1-1] == 2:
+                diamondcondition = True
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
             grid[rowIndex1][colIndex1-1]=1
-
-        diamondcondition = False
-        print(diamondcondition)
-    elif grid[rowIndex1][colIndex1-1] == 5 and grid[rowIndex1][colIndex1-2] != 3 and grid[rowIndex1][colIndex1-2] != 5:
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1][colIndex1-1]=1
-        grid[rowIndex1][colIndex1-2]=5
-    elif grid[rowIndex1][colIndex1-1] != 5 and grid[rowIndex1][colIndex1-1] != 3 and  not diamondcondition:
-        if grid[rowIndex1][colIndex1-1] == 2:
-            diamondcondition = True
-            print(diamondcondition)
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1][colIndex1-1]=1
     drawgrid()
     win()
+diamondrowIndex = 0
+diamondcolIndex = 0
+isdiamondindex = False
 def moveDown(event):
-    global grid,diamondcondition
+    global grid,diamondcondition, diamondcolIndex,diamondrowIndex, isdiamondIndex
     index = getindex1()
     rowIndex1 = index[0]
     colIndex1 = index[1]
-    if diamondcondition  and grid[rowIndex1+1][colIndex1] != 3:
-        if grid[rowIndex1+1][colIndex1] == 5 and grid[rowIndex1+2][colIndex1] != 5:
+    print(diamondcondition)
+    if grid[rowIndex1+1][colIndex1] != 3:
+        if diamondcondition :
+            if grid[rowIndex1+1][colIndex1] != 2:
+                diamondcondition = False
+            if grid[rowIndex1+2][colIndex1] != 5:
+                if grid[rowIndex1+1][colIndex1] == 5:
+                    grid[rowIndex1+2][colIndex1]=5 
             grid[rowIndex1][colIndex1]=2
+            grid[rowIndex1+1][colIndex1]=1
+        elif grid[rowIndex1+1][colIndex1] == 5 and grid[rowIndex1+2][colIndex1] != 3 and grid[rowIndex1+2][colIndex1] != 5 :
+
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                    grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
+            if grid[rowIndex1+2][colIndex1] == 2:
+                diamondrowIndex = rowIndex1+2
+                diamondcolIndex = colIndex1
             grid[rowIndex1+1][colIndex1]=1
             grid[rowIndex1+2][colIndex1]=5
-            diamondcondition = False
-        elif grid[rowIndex1+2][colIndex1] != 5:
-            grid[rowIndex1][colIndex1]=2
+        elif grid[rowIndex1+1][colIndex1] != 5 and not diamondcondition:
+            if grid[rowIndex1+1][colIndex1] == 2:
+                diamondcondition = True
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
             grid[rowIndex1+1][colIndex1]=1
-            diamondcondition = False
-    elif grid[rowIndex1+1][colIndex1] == 5 and grid[rowIndex1+2][colIndex1] != 3 and grid[rowIndex1][colIndex1+2] != 5 :
-        # and grid[rowIndex1-2][colIndex1] != 5
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1+1][colIndex1]=1
-        grid[rowIndex1+2][colIndex1]=5
-    elif grid[rowIndex1+1][colIndex1] != 5 and grid[rowIndex1+1][colIndex1] != 3 and not diamondcondition:
-        if grid[rowIndex1+1][colIndex1] == 2:
-            diamondcondition = True
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1+1][colIndex1]=1
     drawgrid()
     win()
 
 def moveUp(event):
-    global grid, diamondcondition
+    global grid, diamondcondition,diamondcolIndex,diamondrowIndex
     index = getindex1()
     rowIndex1 = index[0]
     colIndex1 = index[1]
-    if diamondcondition and grid[rowIndex1-1][colIndex1] != 3 and grid[rowIndex1-1][colIndex1] != 2:
-        grid[rowIndex1][colIndex1]=2
-        grid[rowIndex1-1][colIndex1]=1
-        diamondcondition = False
-    elif grid[rowIndex1-1][colIndex1] == 5 and grid[rowIndex1-2][colIndex1] !=3 and grid[rowIndex1-2][colIndex1] != 5:
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1-1][colIndex1]=1
-        grid[rowIndex1-2][colIndex1]=5
-    elif grid[rowIndex1-1][colIndex1] != 5 and grid[rowIndex1-1][colIndex1] != 3 and not diamondcondition:
-        if grid[rowIndex1-1][colIndex1] == 2:
-            diamondcondition = True
-        grid[rowIndex1][colIndex1]=0
-        grid[rowIndex1-1][colIndex1]=1
+    if grid[rowIndex1-1][colIndex1] != 3 :
+        if diamondcondition :
+            if grid[rowIndex1-1][colIndex1] != 2:
+                diamondcondition = False
+            if grid[rowIndex1-2][colIndex1] != 5:
+                if grid[rowIndex1-1][colIndex1] == 5:
+                    grid[rowIndex1-2][colIndex1]=5
+            grid[rowIndex1][colIndex1]=2
+            grid[rowIndex1-1][colIndex1]=1
+        elif grid[rowIndex1-1][colIndex1] == 5 and grid[rowIndex1-2][colIndex1] !=3 and grid[rowIndex1-2][colIndex1] != 5:
+
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                    grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
+            if grid[rowIndex1-2][colIndex1] == 2:
+                diamondrowIndex = rowIndex1-2
+                diamondcolIndex = colIndex1
+            grid[rowIndex1+1][colIndex1]=1
+            grid[rowIndex1+2][colIndex1]=5
+        elif grid[rowIndex1-1][colIndex1] != 5 and not diamondcondition:
+            if grid[rowIndex1-1][colIndex1] == 2:
+                diamondcondition = True
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
+            grid[rowIndex1-1][colIndex1]=1
     drawgrid()
     win()
 root.bind("<Right>",moveRight)
