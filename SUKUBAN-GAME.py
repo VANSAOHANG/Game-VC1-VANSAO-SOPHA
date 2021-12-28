@@ -93,10 +93,8 @@ def drawgrid():
         y2+=60
   
     diamondIndex = getDiamondIndex()
-    if diamondIndex==[] and levels<11:
-        canvas.create_image(900,500,image= next,tags = "start")
-        # canvas.create_text(550,300,text="You Win" + "\n"+"level"+str(levels), fill="white", font=('Helvetica 30 bold'))
-        
+    if diamondIndex==[] and levels<8:
+        canvas.create_image(900,500,image= next,tags = "start")        
         levels +=1
         diamondcondition = False
         grid = getgrid()
@@ -119,22 +117,6 @@ def remove(event):
     canvas.delete("aboutText")
     canvas.move("welcome", 0, 100)
 
-# def win():
-#     global grid, diamondcondition, levels,score,boxcounter,iswin
-#     diamondIndex = getDiamondIndex()
-#     uwin =""
-#     if diamondIndex==[] and levels<11:
-#         iswin = True
-#         uwin=canvas.create_text(550,300,text="You Win" + "\n"+"level"+str(levels), fill="white", font=('Helvetica 30 bold'))
-#         iswin = True
-#         # messagebox.showinfo("congratulation !,You Win")
-#         levels +=1
-#         grid = getgrid()
-#         canvas.after(4000,drawgrid)
-#         diamondcondition = False
-#         score += boxcounter*100
-
-#     return uwin
 def getindex1():
     global grid
     index1 = []
