@@ -22,6 +22,7 @@ iswin = False
 #imgages
 img = tk.PhotoImage(file="images\mario.png")
 diamond = tk.PhotoImage(file="images\diamond2.png")
+diamond1 = tk.PhotoImage(file="images\diamond.png")
 wall = tk.PhotoImage(file="images\wall.png")
 box = tk.PhotoImage(file="images\imgbox.png")
 background = tk.PhotoImage(file="images\imgbackground.png")
@@ -60,11 +61,11 @@ def drawgrid():
     getgrid()
     canvas.create_image(0,0,anchor="nw",image = background)
     scores=canvas.create_text(860,60,text="Scores: "+str(score), fill="brown", font=('Helvetica 25 bold'))
+    canvas.create_text(850,100,text="Levels: "+str(levels), fill="brown", font=('Helvetica 25 bold'))
     boxcounter =  0
-    # canvas.create_text(50, 40, text = "<<", fill="white", font="Times 30 italic bold", tags="back")
     canvas.create_image(50,40,anchor="nw",image = backbutton,tag="back")
     canvas.create_image(800,450,anchor="nw",image = restart,tag="restart")
-
+    X1=0
     y1 = 80
     y2 = 140
     for row in range(len(grid)):
@@ -86,13 +87,16 @@ def drawgrid():
             elif grid[row][col] == 5:
                 canvas.create_image(x2-30,y2-30,image=box)
                 boxcounter += 1
+                X1+=40
+                canvas.create_image(755+X1,150,image=diamond1)
         y1+=60
         y2+=60
+  
     diamondIndex = getDiamondIndex()
     if diamondIndex==[] and levels<11:
         canvas.create_image(900,500,image= next,tags = "start")
         # canvas.create_text(550,300,text="You Win" + "\n"+"level"+str(levels), fill="white", font=('Helvetica 30 bold'))
-        # messagebox.showinfo("congratulation !,You Win")
+        
         levels +=1
         diamondcondition = False
         grid = getgrid()
