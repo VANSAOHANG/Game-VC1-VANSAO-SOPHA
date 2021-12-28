@@ -1,5 +1,6 @@
 from tkinter import *
 import tkinter as tk
+from typing import Counter
 from winsound import *
 import winsound
 from tkinter import messagebox
@@ -15,6 +16,9 @@ frame.pack(fill = "both", expand = True)
 diamondcondition = False
 levels=1
 grid = []
+score = 0
+boxcounter = 0
+iswin = False
 #imgages
 img = tk.PhotoImage(file="images\mario.png")
 diamond = tk.PhotoImage(file="images\diamond2.png")
@@ -22,6 +26,14 @@ wall = tk.PhotoImage(file="images\wall.png")
 box = tk.PhotoImage(file="images\imgbox.png")
 background = tk.PhotoImage(file="images\imgbackground.png")
 grass = tk.PhotoImage(file="images\grass.png")
+detail = tk.PhotoImage(file="images\imgaboutgame.png")
+startb = tk.PhotoImage(file="images\startb.png")
+aboutb = tk.PhotoImage(file="images\imgaboutb.png")
+exitb = tk.PhotoImage(file="images\exitb.png")
+backbutton = tk.PhotoImage(file="images\imgbackb.png")
+win = tk.PhotoImage(file="images\win.png")
+next = tk.PhotoImage(file="images\imgnext.png")
+restart = tk.PhotoImage(file="images\imgrestart.png")
 # Function ....................................................................................................................
 
 # Display sound................................................................................................................
@@ -30,7 +42,7 @@ grass = tk.PhotoImage(file="images\grass.png")
 #__________________________get grid from files_______________________________ 
 def getgrid():
     global levels
-    file = open("level"+str(levels)+".txt")
+    file = open("files\\"+"level"+str(levels)+".txt")
     grid = file.read()
     grid = grid.split('|')
     for i in range(len(grid)):
@@ -43,10 +55,16 @@ def getgrid():
 grid = getgrid()
 # _________________________drwagrid__________________________________
 def drawgrid():
-    global grid
+    global grid,score, boxcounter,levels,diamondcondition
     canvas.delete("all")
     getgrid()
     canvas.create_image(0,0,anchor="nw",image = background)
+    scores=canvas.create_text(860,60,text="Scores: "+str(score), fill="brown", font=('Helvetica 25 bold'))
+    boxcounter =  0
+    # canvas.create_text(50, 40, text = "<<", fill="white", font="Times 30 italic bold", tags="back")
+    canvas.create_image(50,40,anchor="nw",image = backbutton,tag="back")
+    canvas.create_image(800,450,anchor="nw",image = restart,tag="restart")
+
     y1 = 80
     y2 = 140
     for row in range(len(grid)):
@@ -61,15 +79,31 @@ def drawgrid():
             elif grid[row][col] == 2:
                 canvas.create_image(x2-30,y2-30,image=grass) 
                 canvas.create_image(x2-30,y2-30,image=diamond)
-                
             elif grid[row][col] == 3:
                 canvas.create_image(x2-30,y2-30,image=wall)
             elif grid[row][col] == 0:
                 canvas.create_image(x2-30,y2-30,image=grass) 
             elif grid[row][col] == 5:
                 canvas.create_image(x2-30,y2-30,image=box)
+                boxcounter += 1
         y1+=60
         y2+=60
+    diamondIndex = getDiamondIndex()
+    if diamondIndex==[] and levels<11:
+        canvas.create_image(900,500,image= next,tags = "start")
+        # canvas.create_text(550,300,text="You Win" + "\n"+"level"+str(levels), fill="white", font=('Helvetica 30 bold'))
+        # messagebox.showinfo("congratulation !,You Win")
+        levels +=1
+        diamondcondition = False
+        grid = getgrid()
+        score += boxcounter*10
+        canvas.delete(scores)
+        canvas.delete("restart")
+        scores=canvas.create_text(860,60,text="Scores: "+str(score), fill="brown", font=('Helvetica 25 bold'))
+        canvas.create_image(500,300,image= win)
+        
+
+    print(boxcounter)
 def displaysound():
         winsound .PlaySound("Sounds.\click.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
 def gamesound():
@@ -80,17 +114,23 @@ def remove(event):
     canvas.delete("delete")
     canvas.delete("aboutText")
     canvas.move("welcome", 0, 100)
-def win():
-    global grid, diamondcondition, levels
-    diamondIndex = getDiamondIndex()
-    uwin =""
-    if diamondIndex==[] and levels<11:
-        uwin=canvas.create_text(350,300,text="You Win" + "\n"+"level"+str(levels), fill="white", font=('Helvetica 30 bold'))
-        levels +=1
-        grid = getgrid()
-        canvas.after(4000,drawgrid)
-        diamondcondition = False
-    return uwin
+
+# def win():
+#     global grid, diamondcondition, levels,score,boxcounter,iswin
+#     diamondIndex = getDiamondIndex()
+#     uwin =""
+#     if diamondIndex==[] and levels<11:
+#         iswin = True
+#         uwin=canvas.create_text(550,300,text="You Win" + "\n"+"level"+str(levels), fill="white", font=('Helvetica 30 bold'))
+#         iswin = True
+#         # messagebox.showinfo("congratulation !,You Win")
+#         levels +=1
+#         grid = getgrid()
+#         canvas.after(4000,drawgrid)
+#         diamondcondition = False
+#         score += boxcounter*100
+
+#     return uwin
 def getindex1():
     global grid
     index1 = []
@@ -166,7 +206,7 @@ def moveRight(event):
         
 
     drawgrid()
-    win()
+    # win()
     
 def moveLeft(event):
     global grid,diamondcondition,diamondrowIndex,diamondcolIndex
@@ -203,12 +243,12 @@ def moveLeft(event):
                 grid[rowIndex1][colIndex1]=0
             grid[rowIndex1][colIndex1-1]=1
     drawgrid()
-    win()
+    # win()
 diamondrowIndex = 0
 diamondcolIndex = 0
 isdiamondindex = False
 def moveDown(event):
-    global grid,diamondcondition, diamondcolIndex,diamondrowIndex, isdiamondIndex
+    global grid,diamondcondition, diamondcolIndex,diamondrowIndex
     index = getindex1()
     rowIndex1 = index[0]
     colIndex1 = index[1]
@@ -242,23 +282,31 @@ def moveDown(event):
                 grid[rowIndex1][colIndex1]=0
             grid[rowIndex1+1][colIndex1]=1
     drawgrid()
-    win()
+    # win()
 
 def moveUp(event):
     global grid, diamondcondition,diamondcolIndex,diamondrowIndex
     index = getindex1()
     rowIndex1 = index[0]
     colIndex1 = index[1]
-    if grid[rowIndex1-1][colIndex1] != 3 :
-        if diamondcondition :
+    if grid[rowIndex1-1][colIndex1] != 3:
+        if grid[rowIndex1-1][colIndex1] != 5 and not diamondcondition :
+            if grid[rowIndex1-1][colIndex1] == 2:
+                diamondcondition = True
+            if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
+                grid[rowIndex1][colIndex1]=2
+            else:
+                grid[rowIndex1][colIndex1]=0
+            grid[rowIndex1-1][colIndex1]=1
+        elif diamondcondition and grid[rowIndex1-2][colIndex1] != 3:
             if grid[rowIndex1-1][colIndex1] != 2:
                 diamondcondition = False
-            if grid[rowIndex1-2][colIndex1] != 5:
+            if grid[rowIndex1-2][colIndex1] != 5 and grid[rowIndex1-1][colIndex1] != 3:
                 if grid[rowIndex1-1][colIndex1] == 5:
-                    grid[rowIndex1-2][colIndex1]=5
+                    grid[rowIndex1-2][colIndex1]=5 
             grid[rowIndex1][colIndex1]=2
             grid[rowIndex1-1][colIndex1]=1
-        elif grid[rowIndex1-1][colIndex1] == 5 and grid[rowIndex1-2][colIndex1] !=3 and grid[rowIndex1-2][colIndex1] != 5:
+        elif grid[rowIndex1-1][colIndex1] == 5 and grid[rowIndex1-2][colIndex1] != 3 and grid[rowIndex1-2][colIndex1] != 5 :
 
             if rowIndex1== diamondrowIndex and colIndex1 == diamondcolIndex:
                     grid[rowIndex1][colIndex1]=2
@@ -267,8 +315,8 @@ def moveUp(event):
             if grid[rowIndex1-2][colIndex1] == 2:
                 diamondrowIndex = rowIndex1-2
                 diamondcolIndex = colIndex1
-            grid[rowIndex1+1][colIndex1]=1
-            grid[rowIndex1+2][colIndex1]=5
+            grid[rowIndex1-1][colIndex1]=1
+            grid[rowIndex1-2][colIndex1]=5
         elif grid[rowIndex1-1][colIndex1] != 5 and not diamondcondition:
             if grid[rowIndex1-1][colIndex1] == 2:
                 diamondcondition = True
@@ -278,7 +326,7 @@ def moveUp(event):
                 grid[rowIndex1][colIndex1]=0
             grid[rowIndex1-1][colIndex1]=1
     drawgrid()
-    win()
+    # win()
 root.bind("<Right>",moveRight)
 root.bind("<Left>",moveLeft)
 root.bind("<Down>",moveDown)
@@ -291,14 +339,8 @@ def start(event):
 def about(event):
     displaysound()
     canvas.move("welcome", 0, -100)
-    canvas.create_rectangle(300, 150, 700, 400, fill="#22BBEA", tags="delete")
+    canvas.create_image(510, 270,image=detail, tags="aboutText")
     canvas.create_text(680, 175, text = "X", fill="red", font=('Helvetica 24 bold'), tags="remove")
-    canvas.create_text(330, 190, anchor=W, font="Purisa",text="- Step1: Click start to choose levels.", tags="aboutText",fill="white")
-    canvas.create_text(330, 220, anchor=W, font="Purisa",text="- Step2: Use arrow key for movement.", tags="aboutText",fill="white")
-    canvas.create_text(330, 250, anchor=W, font="Purisa",text="- Step3: Push the each box cover each diamond.", tags="aboutText",fill="white")
-    canvas.create_text(330, 280, anchor=W, font="Purisa",text="- If the all boxes cover all diamonds it will Win", tags="aboutText",fill="white")
-    canvas.create_text(330, 310, anchor=W, font="Purisa",text="- If you push the box more than 100 times", tags="aboutText",fill="white")
-    canvas.create_text(345, 340, anchor=W, font="Purisa",text="Game over!", tags="aboutText",fill="white")
 ## Exit window
 def exitgame(event):
     global root
@@ -313,17 +355,21 @@ def startbg():
     # Add Text 
     canvas.create_text(500, 150, text = "Welcome to the sukobane!!!", fill="#22BBEA", font="Times 35 italic bold", tags="welcome")
     #Start
-    canvas.create_rectangle(430, 220, 610, 280, fill="#22BBEA", tags="start")
-    canvas.create_text(515, 250, text = "START", fill="white", font="Times 32 italic bold", tags="start")
-
-    # about
-    canvas.create_rectangle(430, 320, 610, 380, fill="#22BBEA", tags="quit")
-    canvas.create_text(515, 350, text = "ABOUT", fill="white", font="Times 32 italic bold", tags="quit")
-    
+    canvas.create_image(515,250, image = startb, tags = "start")
+    # about 
+    canvas.create_image(515,350, image = aboutb, tags = "quit")
     # exit
-    canvas.create_rectangle(430, 420, 610, 480, fill="#22BBEA", tags="exit")
-    canvas.create_text(515, 450, text = "EXIT", fill="white", font="Times 32 italic bold", tags="exit")
-    
+    canvas.create_image(515,450, image = exitb, tags = "exit")
+#restart
+def restart_game(event):
+    global grid
+    grid = getgrid()
+    canvas.after(200,drawgrid)
+### back
+def back(event):
+    startbg()
+    winsound .PlaySound("Sounds.\click.wav", winsound.SND_FILENAME)
+canvas.tag_bind("back","<Button-1>", back)
 # First of game...............................................................................................................
 def begin():
     gamesound()
@@ -332,6 +378,7 @@ def begin():
 
 # ClickOn.....................................................................................................................
 canvas.tag_bind("start", "<Button-1>",start)
+canvas.tag_bind("restart", "<Button-1>",restart_game)
 canvas.tag_bind("quit", "<Button-1>", about)
 canvas.tag_bind("remove", "<Button-1>", remove)
 # Image........................................................................................................................
