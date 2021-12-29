@@ -69,8 +69,12 @@ def drawgrid():
     y1 = 80
     y2 = 140
     for row in range(len(grid)):
-        x1 = 200
-        x2 = 260
+        if levels == 1:
+            x1=60
+            x2 = 120
+        else:
+            x1 = 200
+            x2 = 260
         for col in range(len(grid[0])):
             x1+=60
             x2+=60
@@ -91,7 +95,6 @@ def drawgrid():
                 canvas.create_image(755+X1,150,image=diamond1)
         y1+=60
         y2+=60
-  
     diamondIndex = getDiamondIndex()
     if diamondIndex==[] and levels<8:
         canvas.create_image(900,500,image= next,tags = "start")        
@@ -103,7 +106,9 @@ def drawgrid():
         canvas.delete("restart")
         scores=canvas.create_text(860,60,text="Scores: "+str(score), fill="brown", font=('Helvetica 25 bold'))
         canvas.create_image(500,300,image= win)
-        
+        if levels==8:
+            messagebox.showinfo(title="Excelence !!!",message="You win all levels of Sukoban Game")
+            
 
     print(boxcounter)
 def displaysound():
